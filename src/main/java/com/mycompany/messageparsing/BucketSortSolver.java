@@ -13,6 +13,7 @@ public class BucketSortSolver {
     private static final String SPLIT_LIST_QUEUE_NAME = "split-list";
     private static final String SORT_BUCKET_QUEUE_NAME = "sort-bucket";
     private static final String SORTED_BUCKETS_QUEUE_NAME = "sorted-buckets";
+    private static final String SORTED_LIST_QUEUE_NAME = "sorted-list";
 
     public List<Long> solve(List<Long> list) {
         try {
@@ -26,6 +27,7 @@ public class BucketSortSolver {
             Destination splitListIntoBucketsQueue = session.createQueue(SPLIT_LIST_QUEUE_NAME);
             Destination sortBucketsQueue = session.createQueue(SORT_BUCKET_QUEUE_NAME);
             Destination sortedBucketsQueue = session.createQueue(SORTED_BUCKETS_QUEUE_NAME);
+            Destination sortedListQueue = session.createQueue(SORTED_LIST_QUEUE_NAME);
 
             sendListToActiveMQ(list, splitListIntoBucketsQueue, session);
             List<List<Long>> buckets = listenToSendListQueue(splitListIntoBucketsQueue, session);
@@ -36,14 +38,19 @@ public class BucketSortSolver {
 
             listenToSortBucketsQueue(sortBucketsQueue, sortedBucketsQueue, session);
 
-            listenToSortedBucketsQueue(sortedBucketsQueue, session);
+            listenToSortedBucketsQueue(sortedBucketsQueue, sortedListQueue, session);
+
+            List<Long> sortedList = listenToSortedListQueue(sortedListQueue, session);
 
             session.close();
             connection.close();
+
+            return sortedList;
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return list;
+
+        return null;
     }
 
     private void sendListToActiveMQ(List list, Destination queue, Session session) throws
@@ -118,8 +125,8 @@ public class BucketSortSolver {
         consumer.close();
     }
 
-    private void listenToSortedBucketsQueue(Destination queue, Session session) throws JMSException {
-        MessageConsumer consumer = session.createConsumer(queue);
+    private void listenToSortedBucketsQueue(Destination listenQueue, Destination sendQueue, Session session) throws JMSException {
+        MessageConsumer consumer = session.createConsumer(listenQueue);
         Integer totalSize = null;
         List<Long> sortedList = new ArrayList<>();
 
@@ -138,6 +145,30 @@ public class BucketSortSolver {
             }
         }
 
+        MessageProducer producer = session.createProducer(sendQueue);
+        ObjectMessage sortedListMessage = session.createObjectMessage((Serializable) sortedList);
+        producer.send(sortedListMessage);
+
+        producer.close();
         consumer.close();
+    }
+
+    private List<Long> listenToSortedListQueue(Destination queue, Session session) throws JMSException {
+        MessageConsumer consumer = session.createConsumer(queue);
+
+        Message message = consumer.receive();
+        if (message instanceof ObjectMessage) {
+            ObjectMessage objectMsg = (ObjectMessage) message;
+            List<Long> list = (List<Long>) objectMsg.getObject();
+            System.out.println("sortedListListener got a list of size " + list.size());
+
+            consumer.close();
+
+            return list;
+        }
+
+        consumer.close();
+
+        return null;
     }
 }
