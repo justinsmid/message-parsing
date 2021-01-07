@@ -1,7 +1,8 @@
+package com.mycompany.messageparsing;
+
 import org.apache.activemq.ActiveMQConnectionFactory;
 
 import javax.jms.*;
-import javax.xml.soap.Text;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Comparator;

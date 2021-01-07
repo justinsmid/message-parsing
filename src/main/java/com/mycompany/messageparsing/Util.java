@@ -1,3 +1,5 @@
+package com.mycompany.messageparsing;
+
 import java.util.List;
 
 public class Util {
@@ -10,5 +12,9 @@ public class Util {
         }
 
         return max;
+    }
+
+    public interface Function {
+        public void execute();
     }
 }

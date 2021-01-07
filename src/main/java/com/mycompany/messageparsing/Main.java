@@ -1,10 +1,6 @@
-import javax.jms.*;
+package com.mycompany.messageparsing;
 
-import org.apache.activemq.ActiveMQConnectionFactory;
-
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
