@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Random;
 
 public class BucketSortSolver {
     private static final String URL = "tcp://localhost:61616";
@@ -15,7 +16,7 @@ public class BucketSortSolver {
     private static final String SORTED_BUCKETS_QUEUE_NAME = "sorted-buckets";
     private static final String SORTED_LIST_QUEUE_NAME = "sorted-list";
 
-    public List<Long> solve(List<Long> list) {
+    public List<Long> sortUsingActiveMQ(List<Long> list) {
         try {
             // Create ActiveMQ connection and session
             ActiveMQConnectionFactory factory = new ActiveMQConnectionFactory(URL);
@@ -51,6 +52,38 @@ public class BucketSortSolver {
         }
 
         return null;
+    }
+
+    public List<Long> sortSequentially(List<Long> list) {
+        int nElements = list.size();
+        int nBuckets = (int) Math.sqrt(nElements);
+        Long max = Util.findMax(list);
+
+        // Create buckets
+        List<List<Long>> buckets = new ArrayList<>(nBuckets);
+        for (int i = 0; i < nBuckets; i++) {
+            buckets.add(new ArrayList<>());
+        }
+
+        // Distribute elements into their respective bucket
+        for (Long element : list) {
+            int originalBucketIdx = (int) Math.floor(nBuckets * element / (double) max);
+            int bucketIdx = element.equals(max) ? originalBucketIdx - 1 : originalBucketIdx;
+            List<Long> bucket = buckets.get(bucketIdx);
+            bucket.add(element);
+        }
+
+        // Sort buckets
+        Comparator<Long> comparator = Comparator.naturalOrder();
+        for (List<Long> bucket : buckets) {
+            bucket.sort(comparator);
+        }
+
+        // Join buckets together into the final sorted list
+        List<Long> sortedList = new ArrayList<>(nElements);
+        buckets.forEach(sortedList::addAll);
+
+        return sortedList;
     }
 
     private void sendListToActiveMQ(List list, Destination queue, Session session) throws

@@ -29,11 +29,11 @@ public class BucketSortTest {
             unsortedList.add(value);
         }
 
-        List<Long> sortedList = sorter.solve(unsortedList);
-        assertTrue(isSorted(sortedList));
+        List<Long> activeMQSortedList = sorter.sortUsingActiveMQ(unsortedList);
+        assertTrue(isSorted(activeMQSortedList));
 
-        /**List<Long> parallelSortedList = sorter.parallel();
-        assertTrue(isSorted(parallelSortedList));*/
+        List<Long> sequentiallySortedList = sorter.sortSequentially(unsortedList);
+        assertTrue(isSorted(sequentiallySortedList));
     }
 
     /**
@@ -74,7 +74,7 @@ public class BucketSortTest {
             unsortedList.add(value);
         }
 
-        long parallelTimeTaken = measureTime(() -> sorter.solve(unsortedList));
+        long parallelTimeTaken = measureTime(() -> sorter.sortUsingActiveMQ(unsortedList));
 
         System.out.printf("Parallel sorting took %d ms\n", parallelTimeTaken);
 /**

@@ -17,6 +17,7 @@ public class Main {
             unsortedList.add(value);
         }
 
-        solver.solve(unsortedList);
+        List<Long> activeMQSortedList = solver.sortUsingActiveMQ(unsortedList);
+        List<Long> sequentiallySortedList = solver.sortSequentially(unsortedList);
     }
 }
