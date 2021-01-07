@@ -14,7 +14,7 @@ public class BucketSortTest {
     /**private final int maxThreads = Runtime.getRuntime().availableProcessors();
 
     /**
-     * Runs the algorithm sequentially and in parallel and checks whether both return a correctly sorted list
+     * Runs the algorithm sequentially and using activeMQ and checks whether both return a correctly sorted list
      */
     @Test
     public void listHasBeenSorted() {
@@ -37,7 +37,7 @@ public class BucketSortTest {
     }
 
     /**
-     * Prints the time it takes to sort an array of 2million elements in parallel and sequentially
+     * Prints the time it takes to sort an array of 10000 elements in parallel and sequentially
      */
     @Test
     public void printTime() {
@@ -74,16 +74,16 @@ public class BucketSortTest {
             unsortedList.add(value);
         }
 
-        long parallelTimeTaken = measureTime(() -> sorter.sortUsingActiveMQ(unsortedList));
+        long activeMQTimeTaken = measureTime(() -> sorter.sortUsingActiveMQ(unsortedList));
 
-        System.out.printf("Parallel sorting took %d ms\n", parallelTimeTaken);
-/**
-        long sequentialTimeTaken = measureTime(sorter::sequential);
+        System.out.printf("ActiveMQ sorting took %d ms\n", activeMQTimeTaken);
+
+        long sequentialTimeTaken = measureTime(() -> sorter.sortSequentially(unsortedList));
         System.out.printf("Sequential sorting took %d ms\n", sequentialTimeTaken);
 
-        String faster = parallelTimeTaken > sequentialTimeTaken ? "sequential" : "parallel";
-        long difference = Math.abs(parallelTimeTaken - sequentialTimeTaken);
-        System.out.printf("%s was %d ms faster\n", faster, difference);*/
+        String faster = activeMQTimeTaken > sequentialTimeTaken ? "sequential" : "ActiveMQ";
+        long difference = Math.abs(activeMQTimeTaken - sequentialTimeTaken);
+        System.out.printf("%s was %d ms faster\n", faster, difference);
     }
 
     //////////////////////////////////////////  DATA COLLECTION  ///////////////////////////////////////////////////////
