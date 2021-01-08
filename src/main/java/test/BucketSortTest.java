@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import com.mycompany.messageparsing.BucketSortSolver;
 import com.mycompany.messageparsing.Util;
 import org.junit.jupiter.api.Test;
+import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.List;
 
@@ -12,10 +13,11 @@ public class BucketSortTest {
     private final int DEFAULT_ARRAY_SIZE = 100_000;
 
     /**
-     * Runs the algorithm sequentially and using activeMQ and checks whether both return a correctly sorted list
+     * Runs the algorithm sequentially and using activeMQ and checks whether the sorted lists are valid.
+     * The lists are valid if they are sorted and still contain the same elements as the unsorted list.
      */
     @Test
-    public void listHasBeenSorted() {
+    public void sortedListIsValid() {
         BucketSortSolver sorter = new BucketSortSolver();
 
         List<Long> unsortedList = Util.randomListOfSize(DEFAULT_ARRAY_SIZE);
@@ -25,6 +27,10 @@ public class BucketSortTest {
 
         List<Long> sequentiallySortedList = sorter.sortSequentially(unsortedList);
         assertTrue(isSorted(sequentiallySortedList));
+
+        assertTrue(CollectionUtils.isEqualCollection(unsortedList, activeMQSortedList));
+        assertTrue(CollectionUtils.isEqualCollection(unsortedList, sequentiallySortedList));
+        assertTrue(CollectionUtils.isEqualCollection(activeMQSortedList, sequentiallySortedList));
     }
 
     /**
@@ -77,16 +83,16 @@ public class BucketSortTest {
     ///  We recommend adjusting their values accordingly beforehand if you wish to run them yourself.                ///
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    @Test
-    public void nElementsBenchmark() {
-        final int[] nElementsArray = new int[]{
-                10_000, 25_000, 50_000, 100_000, 250_000, 500_000, 1_000_000, 2_500_000, 5_000_000, 7_000_000
-        };
-
-        for (int nElements : nElementsArray) {
-            System.out.printf("%d elements:\n", nElements);
-            printTimeTaken(nElements);
-            System.out.println("");
-        }
-    }
+//    @Test
+//    public void nElementsBenchmark() {
+//        final int[] nElementsArray = new int[]{
+//                10_000, 25_000, 50_000, 100_000, 250_000, 500_000, 1_000_000, 2_500_000, 5_000_000, 7_000_000
+//        };
+//
+//        for (int nElements : nElementsArray) {
+//            System.out.printf("%d elements:\n", nElements);
+//            printTimeTaken(nElements);
+//            System.out.println("");
+//        }
+//    }
 }
