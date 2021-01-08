@@ -1,0 +1,49 @@
+10000 elements:
+ActiveMQ sorting took 453 ms
+Sequential sorting took 6 ms
+sequential was 447 ms faster
+
+25000 elements:
+ActiveMQ sorting took 814 ms
+Sequential sorting took 8 ms
+sequential was 806 ms faster
+
+50000 elements:
+ActiveMQ sorting took 696 ms
+Sequential sorting took 16 ms
+sequential was 680 ms faster
+
+100000 elements:
+ActiveMQ sorting took 1524 ms
+Sequential sorting took 35 ms
+sequential was 1489 ms faster
+
+250000 elements:
+ActiveMQ sorting took 4319 ms
+Sequential sorting took 77 ms
+sequential was 4242 ms faster
+
+500000 elements:
+ActiveMQ sorting took 6432 ms
+Sequential sorting took 176 ms
+sequential was 6256 ms faster
+
+1000000 elements:
+ActiveMQ sorting took 11655 ms
+Sequential sorting took 432 ms
+sequential was 11223 ms faster
+
+2500000 elements:
+ActiveMQ sorting took 29309 ms
+Sequential sorting took 1291 ms
+sequential was 28018 ms faster
+
+5000000 elements:
+ActiveMQ sorting took 54641 ms
+Sequential sorting took 2365 ms
+sequential was 52276 ms faster
+
+7000000 elements:
+ActiveMQ sorting took 71014 ms
+Sequential sorting took 4258 ms
+sequential was 66756 ms faster
