@@ -77,12 +77,6 @@ public class BucketSortTest {
         System.out.printf("%s was %d ms faster\n", faster, difference);
     }
 
-    //////////////////////////////////////////  DATA COLLECTION  ///////////////////////////////////////////////////////
-    ///  Underneath follow the tests we ran to gather the data shown in the graphs.                                  ///
-    ///  Running them as-is on a sub-par computer may result in lag or a crash due to large numbers and long runtime ///
-    ///  We recommend adjusting their values accordingly beforehand if you wish to run them yourself.                ///
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 //    @Test
 //    public void nElementsBenchmark() {
 //        final int[] nElementsArray = new int[]{
