@@ -6,28 +6,19 @@ import com.mycompany.messageparsing.BucketSortSolver;
 import com.mycompany.messageparsing.Util;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class BucketSortTest {
-    /**private final int maxThreads = Runtime.getRuntime().availableProcessors();
+    private final int DEFAULT_ARRAY_SIZE = 100_000;
 
     /**
      * Runs the algorithm sequentially and using activeMQ and checks whether both return a correctly sorted list
      */
     @Test
     public void listHasBeenSorted() {
-        final int ARRAY_SIZE = 10_000;
-
         BucketSortSolver sorter = new BucketSortSolver();
 
-        Random rng = new Random();
-        List<Long> unsortedList = new ArrayList<>();
-        for (int i = 0; i < ARRAY_SIZE; i++) {
-            long value = Math.abs(rng.nextInt());
-            unsortedList.add(value);
-        }
+        List<Long> unsortedList = Util.randomListOfSize(DEFAULT_ARRAY_SIZE);
 
         List<Long> activeMQSortedList = sorter.sortUsingActiveMQ(unsortedList);
         assertTrue(isSorted(activeMQSortedList));
@@ -37,13 +28,11 @@ public class BucketSortTest {
     }
 
     /**
-     * Prints the time it takes to sort an array of 10000 elements in parallel and sequentially
+     * Prints the time it takes to sort an array of 100000 elements in parallel and sequentially
      */
     @Test
     public void printTime() {
-        final int ARRAY_SIZE = 10000;
-
-        printTimeTaken(ARRAY_SIZE);
+        printTimeTaken(DEFAULT_ARRAY_SIZE);
     }
 
     private boolean isSorted(List<Long> list) {
@@ -67,12 +56,8 @@ public class BucketSortTest {
 
     private void printTimeTaken(int nElements) {
         BucketSortSolver sorter = new BucketSortSolver();
-        Random rng = new Random();
-        List<Long> unsortedList = new ArrayList<>();
-        for (int i = 0; i < nElements; i++) {
-            long value = Math.abs(rng.nextInt());
-            unsortedList.add(value);
-        }
+
+        List<Long> unsortedList = Util.randomListOfSize(nElements);
 
         long activeMQTimeTaken = measureTime(() -> sorter.sortUsingActiveMQ(unsortedList));
 
@@ -92,27 +77,16 @@ public class BucketSortTest {
     ///  We recommend adjusting their values accordingly beforehand if you wish to run them yourself.                ///
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//    @Test
-//    public void nThreadsBenchmark() {
-//        int[] nElementsArray = new int[]{ 100_000, 1_000_000, 5_000_000, 10_000_000, 25_000_000 };
-//
-//        for (int nElements : nElementsArray) {
-//            for (int threads = 1; threads <= maxThreads; threads++) {
-//                System.out.println();
-//                System.out.printf("%d thread(s), %d elements:\n", threads, nElements);
-//                printTimeTaken(threads, nElements);
-//            }
-//        }
-//    }
+    @Test
+    public void nElementsBenchmark() {
+        final int[] nElementsArray = new int[]{
+                10_000, 25_000, 50_000, 100_000, 250_000, 500_000, 1_000_000, 2_500_000, 5_000_000, 7_000_000
+        };
 
-//    @Test
-//    public void nElementsBenchmark() {
-//        int nElements = 10_000;
-//
-//        for (int i = 0; i < 100; i++) {
-//            int currentNElements = (i * i) * nElements;
-//            System.out.println("i: " + i + " # of elements: " + currentNElements);
-//            printTimeTaken(maxThreads, currentNElements);
-//        }
-//    }
+        for (int nElements : nElementsArray) {
+            System.out.printf("%d elements:\n", nElements);
+            printTimeTaken(nElements);
+            System.out.println("");
+        }
+    }
 }

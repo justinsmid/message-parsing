@@ -7,7 +7,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Random;
 
 public class BucketSortSolver {
     private static final String URL = "tcp://localhost:61616";
@@ -108,7 +107,6 @@ public class BucketSortSolver {
         if (message instanceof ObjectMessage) {
             ObjectMessage objectMsg = (ObjectMessage) message;
             List<Long> list = (List<Long>) objectMsg.getObject();
-            System.out.println("SendListQueue listener got a list of size " + list.size());
 
             int nBuckets = (int) Math.sqrt(list.size());
             List<List<Long>> buckets = new ArrayList<>();
@@ -140,7 +138,6 @@ public class BucketSortSolver {
         if (message instanceof ObjectMessage) {
             ObjectMessage objectMsg = (ObjectMessage) message;
             List<List<Long>> buckets = (List<List<Long>>) objectMsg.getObject();
-            System.out.println("sortBucketsListener got a list of size " + buckets.size());
 
             MessageProducer producer = session.createProducer(sendQueue);
 
@@ -168,7 +165,6 @@ public class BucketSortSolver {
             if (message instanceof ObjectMessage) {
                 ObjectMessage objectMsg = (ObjectMessage) message;
                 List<Long> bucket = (List<Long>) objectMsg.getObject();
-                System.out.println("sortedBucketsListener got a list of size " + bucket.size());
 
                 sortedList.addAll(bucket);
             } else if (message instanceof TextMessage) {
@@ -193,7 +189,6 @@ public class BucketSortSolver {
         if (message instanceof ObjectMessage) {
             ObjectMessage objectMsg = (ObjectMessage) message;
             List<Long> list = (List<Long>) objectMsg.getObject();
-            System.out.println("sortedListListener got a list of size " + list.size());
 
             consumer.close();
 
